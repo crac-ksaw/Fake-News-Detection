@@ -1,6 +1,6 @@
 # Fake News Detector 🧠
 
-A Streamlit-powered web application designed to detect fake news using advanced natural language processing techniques. It leverages a custom-trained deep learning model (`heights.h5`) and the Groq API as an enhancement engine for sophisticated news verification.
+A Streamlit-powered web application designed to detect fake news using advanced natural language processing techniques. It leverages a custom-trained deep learning model and the Groq API as an enhancement engine for sophisticated news verification.
 
 ## Features
 

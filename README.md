@@ -1,94 +1,61 @@
-# Fake News Detector 🧠
+# 🧠 Fake News Detection - Production-Grade AI Pipeline
 
-A Streamlit-powered web application designed to detect fake news using advanced natural language processing techniques. It leverages a custom-trained deep learning model and the Groq API as an enhancement engine for sophisticated news verification.
+A modular, scalable, and RAG-powered news verification system. This project refactors a monolithic script into a clean, decoupled microservices architecture designed for reliability and production-readiness.
 
-## Features
+## 🚀 Features
 
-- **User-Friendly Interface:** Clean and intuitive web UI built with Streamlit.
-- **Model Integration:** Utilizes the `heights.h5` data model, expertly trained on news datasets to distinguish between genuine and fake news.
-- **Groq API Enhancement:** Connects to the Groq API to improve detection accuracy and add advanced inference capabilities, offering more reliable news classification.
-- **Environment Variable Support:** Leverages `.env` file for API keys and secure configuration.
-- **Modern Python Stack:** Powered by `streamlit`, `requests`, and `python-dotenv`.
+- **Decoupled Architecture:** Separated Frontend (Streamlit) and Backend (FastAPI).
+- **RAG-Powered (Retrieval-Augmented Generation):** Contextual retrieval via FAISS and HuggingFace embeddings (`all-MiniLM-L6-v2`) to ground predictions in verified facts.
+- **Advanced LLM Inference:** Integrated with **Groq (Llama-3)** for high-speed, cost-effective news analysis.
+- **Robust Validation:** Pydantic models ensure inputs are clean and within length limits.
+- **Confidence Thresholding:** Automatic fallback to `UNCERTAIN` classification if the model's confidence is below 70%.
+- **High Performance:** Response caching via `InMemoryCache` to reduce API costs and latency.
+- **Production Observability:** Structured logging with `Loguru` (local and rotating files).
+- **Docker Ready:** Containerized for easy deployment on GCP, AWS, or Azure.
 
+## 📁 Project Structure
 
-## Installation
+```text
+D:\Fake-News-Detection\
+├── backend/            # FastAPI Backend
+│   ├── api/            # API Routes
+│   ├── core/           # Configuration and Logger
+│   ├── models/         # Pydantic Schemas
+│   ├── services/       # RAG Pipeline, Retrieval, and LLM Logic
+│   └── main.py         # Entry point
+├── frontend/           # Streamlit Web App
+├── tests/              # API and Logic Tests
+├── docker-compose.yml  # Orchestration
+├── requirements.txt    # Unified dependencies
+└── faiss_index/        # Vector Store storage
+```
 
-### 1. Clone the Repository
+## 🛠️ Getting Started
 
+### 1. Environment Variables
+Create a `.env` file in the root with your keys:
+```env
+GROQ_API_KEY=your_key_here
+GROQ_MODEL=llama3-8b-8192
+```
+
+### 2. Run with Docker (Recommended)
 ```bash
-git clone https://github.com/yourusername/fake-news-detector.git
-cd fake-news-detector
+docker-compose up --build
 ```
+- **Frontend:** [http://localhost:8501](http://localhost:8501)
+- **Backend API Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
 
+### 3. Run Manually (Local)
+1. Install requirements: `pip install -r requirements.txt`
+2. Start Backend: `uvicorn backend.main:app --port 8000`
+3. Start Frontend: `streamlit run frontend/app.py`
 
-### 2. Install Requirements
-
+## 🧪 Verification
+Run unit and integration tests using pytest:
 ```bash
-pip install -r requirements.txt
+pytest tests/
 ```
 
-
-### 3. Add Environment Variables
-
-Create a `.env` file in the project root:
-
-```
-GROQ_API_KEY=your_groq_api_key
-GROQ_API_URL=https://api.groq.com/v1/endpoint
-GROQ_MODEL=your_groq_model_name
-```
-
-
-## Usage
-
-Launch the Streamlit application:
-
-```bash
-streamlit run bert_app.py
-```
-
-Visit the displayed local URL to interact with the Fake News Detector.
-
-## How It Works
-
-1. **User Input:** Enter a piece of news or text into the web interface.
-2. **Local Prediction:** The app loads and queries the `heights.h5` trained model to predict if the news is fake.
-3. **Enhanced Verification:** For advanced or ambiguous entries, the text is sent to the Groq API for a second opinion leveraging Groq’s powerful AI infrastructure.
-4. **Results:** The interface displays a clear verdict – real or fake – with potential confidence scores or insightful feedback.
-
-## Project Structure
-
-| File | Description |
-| :-- | :-- |
-| `bert_app.py` | Main Streamlit application code. |
-| `requirements.txt` | Python dependencies. |
-| `.env` | Environment variables (not included). |
-| `heights.h5` | Trained deep learning data model (see notes). |
-
-## Limitations
-
-- **Not Updated to Latest News:** The underlying `heights.h5` model and the system’s predictions are based on news data available at the time of training. As a result, events and content from after the latest training set are not considered, limiting the tool's ability to verify or analyze emerging news topics.
-- **Model Generalization:** Predictions may not reflect context changes or new forms of misinformation that have emerged since the latest training.
-- **Dependence on Groq API:** Advanced detection features require internet connectivity and valid API credentials.
-- **No Real-Time Fact-Checking:** The system does not perform live cross-referencing with ongoing news sources or databases.
-- **Potential for False Positives/Negatives:** As with any automated model, errors in classification can occur, especially with nuanced or ambiguous news content.
-
-
-## Notes
-
-- **Model File:** Ensure you have `heights.h5` in the project directory for the app to function.
-- **API Key:** Sign up at Groq and obtain API credentials for enhanced analysis.
-- **Security:** Never commit your `.env` file or API keys to public repositories.
-
-
-## License
-
-This project is for educational and research purposes. Please check individual files for their respective licenses if using or modifying them.
-
-## Acknowledgements
-
-- Streamlit team for an exceptional open-source web app framework.
-- The creators of Groq for enabling advanced NLP capabilities via API.
-- Open-source contributors to Python NLP toolkits.
-
-Feel free to submit issues or requests for additional features!
+## 🚀 Deployment
+This system is ready for containerized cloud deployment. Each service has its own `Dockerfile` optimized for minimal size and fast startup.

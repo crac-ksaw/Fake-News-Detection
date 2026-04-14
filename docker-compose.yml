@@ -10,7 +10,6 @@ services:
     environment:
       - GROQ_API_KEY=${GROQ_API_KEY}
     volumes:
-      - ./faiss_index:/app/faiss_index
       - ./logs:/app/logs
 
   frontend:

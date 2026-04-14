@@ -1,61 +1,84 @@
-# 🧠 Fake News Detection - Production-Grade AI Pipeline
+# Fake News Detection API
 
-A modular, scalable, and RAG-powered news verification system. This project refactors a monolithic script into a clean, decoupled microservices architecture designed for reliability and production-readiness.
+A simplified fake news detection project with a FastAPI backend, a Streamlit frontend, live news retrieval, and Groq-based reasoning.
 
-## 🚀 Features
+## Features
 
-- **Decoupled Architecture:** Separated Frontend (Streamlit) and Backend (FastAPI).
-- **RAG-Powered (Retrieval-Augmented Generation):** Contextual retrieval via FAISS and HuggingFace embeddings (`all-MiniLM-L6-v2`) to ground predictions in verified facts.
-- **Advanced LLM Inference:** Integrated with **Groq (Llama-3)** for high-speed, cost-effective news analysis.
-- **Robust Validation:** Pydantic models ensure inputs are clean and within length limits.
-- **Confidence Thresholding:** Automatic fallback to `UNCERTAIN` classification if the model's confidence is below 70%.
-- **High Performance:** Response caching via `InMemoryCache` to reduce API costs and latency.
-- **Production Observability:** Structured logging with `Loguru` (local and rotating files).
-- **Docker Ready:** Containerized for easy deployment on GCP, AWS, or Azure.
+- FastAPI backend for API access
+- Streamlit frontend for quick manual checks
+- Live retrieval from public news search feeds
+- Groq-powered classification over retrieved evidence
+- Request and response validation with Pydantic
+- Confidence threshold fallback to `UNCERTAIN`
+- Console and rotating file logging
+- Docker support
 
-## 📁 Project Structure
+## Project Structure
 
 ```text
 D:\Fake-News-Detection\
-├── backend/            # FastAPI Backend
-│   ├── api/            # API Routes
-│   ├── core/           # Configuration and Logger
-│   ├── models/         # Pydantic Schemas
-│   ├── services/       # RAG Pipeline, Retrieval, and LLM Logic
-│   └── main.py         # Entry point
-├── frontend/           # Streamlit Web App
-├── tests/              # API and Logic Tests
-├── docker-compose.yml  # Orchestration
-├── requirements.txt    # Unified dependencies
-└── faiss_index/        # Vector Store storage
+|-- backend/
+|   |-- api/
+|   |-- core/
+|   |-- models/
+|   |-- services/
+|   `-- main.py
+|-- frontend/
+|-- tests/
+|-- docker-compose.yml
+|-- requirements.txt
+`-- README.md
 ```
 
-## 🛠️ Getting Started
+## Environment
 
-### 1. Environment Variables
-Create a `.env` file in the root with your keys:
+Create a `.env` file in the project root:
+
 ```env
 GROQ_API_KEY=your_key_here
-GROQ_MODEL=llama3-8b-8192
 ```
 
-### 2. Run with Docker (Recommended)
+Optional settings:
+
+```env
+GROQ_MODEL=llama-3.3-70b-versatile
+GROQ_TIMEOUT_SECONDS=30
+CONFIDENCE_THRESHOLD=0.70
+```
+
+Only `GROQ_API_KEY` is required.
+
+## Local Run
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Start the backend:
+
+```bash
+uvicorn backend.main:app --host 0.0.0.0 --port 8000
+```
+
+Start the frontend:
+
+```bash
+streamlit run frontend/app.py
+```
+
+- Backend docs: http://localhost:8000/docs
+- Frontend: http://localhost:8501
+
+## Docker Run
+
 ```bash
 docker-compose up --build
 ```
-- **Frontend:** [http://localhost:8501](http://localhost:8501)
-- **Backend API Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
 
-### 3. Run Manually (Local)
-1. Install requirements: `pip install -r requirements.txt`
-2. Start Backend: `uvicorn backend.main:app --port 8000`
-3. Start Frontend: `streamlit run frontend/app.py`
+## Tests
 
-## 🧪 Verification
-Run unit and integration tests using pytest:
 ```bash
 pytest tests/
 ```
-
-## 🚀 Deployment
-This system is ready for containerized cloud deployment. Each service has its own `Dockerfile` optimized for minimal size and fast startup.

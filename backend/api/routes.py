@@ -8,13 +8,12 @@ router = APIRouter()
 @router.post("/verify", response_model=NewsResponse)
 async def verify_news(request: NewsRequest):
     logger.info("Received /verify request")
-    # For very long text, we could chunk here or in the pipeline.
-    # The Pydantic model ensures text is at least 10 chars.
-    if len(request.text) > 5000:
+    text = request.text
+    if len(text) > 5000:
         logger.warning("Input text too long. Truncating to 5000 characters.")
-        request.text = request.text[:5000]
+        text = text[:5000]
 
-    result = analyze_news(request.text)
+    result = analyze_news(text)
     
     if result["classification"] == "ERROR":
         raise HTTPException(status_code=500, detail=result["reasoning"])

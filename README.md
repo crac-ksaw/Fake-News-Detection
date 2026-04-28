@@ -2,6 +2,8 @@
 
 A simplified fake news detection project with a FastAPI backend, a Streamlit frontend, live news retrieval, and Groq-based reasoning.
 
+[Live Preview](https://fake-news-detection-dylqhaqzbmndfekwzzxwrg.streamlit.app)
+
 ## Features
 
 - FastAPI backend for API access
